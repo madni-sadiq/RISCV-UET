@@ -60,7 +60,7 @@ class Datapath extends Module with Config {
   val ew_pc   = Reg(UInt())
   val ew_alu  = Reg(UInt())
   val csr_in  = Reg(UInt())
-  val ld_data = Reg(UInt(XLEN.W)) 
+  // val ld_data = Reg(UInt(XLEN.W))  // MT was used for Asynchronous data mem
 
   /****** Control signals *****/
   val st_type  = Reg(io.ctrl.st_type.cloneType)
@@ -163,11 +163,11 @@ class Datapath extends Module with Config {
   }
 
   // Load
-  io.dmem.rd_en     := !stall && io.ctrl.ld_type.orR
+  io.dmem.rd_en     := !stall && ld_type.orR
   io.dmem.ld_type  := Mux(stall, ld_type, io.ctrl.ld_type)
 
 //  val loffset = ew_alu(1) << 4.U | ew_alu(0) << 3.U
-  ld_data  := io.dmem.rdata 
+  val ld_data  = io.dmem.rdata             // MT use "ld_data:= " instead for Asynchronous data memory
   val load    = MuxLookup(ld_type, io.dmem.rdata.zext, Seq(
     LD_LW  -> ld_data.zext,
     LD_LH  -> ld_data(15, 0).asSInt, LD_LB  -> ld_data(7, 0).asSInt,

@@ -34,7 +34,7 @@ class DataMem extends Module with Config {
   val io = IO(new DataMemIO)
 
   // DATA_CAHCE_LEM Byte and DATA_CAHCE_LEM / 4 Words
-  val dmem = Mem(DATA_MEM_LEN, UInt(BLEN.W))
+  val dmem = SyncReadMem(DATA_MEM_LEN, UInt(BLEN.W))
  // loadMemoryFromFile(dmem, "resources/datamem.txt")
 
 
